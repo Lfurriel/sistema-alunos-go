@@ -8,7 +8,7 @@ import (
 
 type AlunoAula struct {
 	Id        string    `json:"id" gorm:"primaryKey;column:id;type:varchar(36)"`
-	AulaId    string    `json:"aula_id" gorm:"not null;column:aula_id" binding:"required"`
+	AulaId    string    `json:"aula_id" gorm:"not null;column:aula_id"`
 	AlunoId   string    `json:"aluno_id" gorm:"not null;column:aluno_id" binding:"required"`
 	Presenca  bool      `json:"presenca" gorm:"column:not null;presenca" binding:"required"`
 	CreatedAt time.Time `json:"createdAt" gorm:"autoCreateTime;column:created_at;not null"`

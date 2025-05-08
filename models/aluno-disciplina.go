@@ -10,7 +10,6 @@ type AlunoDisciplina struct {
 	Id           string    `json:"id" gorm:"primaryKey;column:id"`
 	AlunoId      string    `json:"alunoId" gorm:"not null;column:aluno_id"`
 	DisciplinaId string    `json:"disciplinaId" gorm:"not null;column:disciplina_id"`
-	Presenca     bool      `json:"presenca" gorm:"column:presenca;not null"`
 	CreatedAt    time.Time `json:"createdAt" gorm:"autoCreateTime;column:created_at;not null"`
 	UpdatedAt    time.Time `json:"updatedAt" gorm:"autoUpdateTime;column:updated_at;not null"`
 

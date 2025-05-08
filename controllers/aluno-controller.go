@@ -9,14 +9,13 @@ import (
 	"sistema-alunos-go/validations"
 )
 
-// TODO: a aula deve receber os alunos presentes, e assim marcar a presença de cada aluno e falta dos que não aparecerem
-func CadastrarAula(ctx *gin.Context) {
-	var aula models.Aula
-	if !validations.AulaValida(&aula, ctx) {
+func CadastrarAluno(ctx *gin.Context) {
+	var aluno models.Aluno
+	if !validations.AlunoValido(&aluno, ctx) {
 		return
 	}
 
-	result, restErr := services.CadastrarAula(aula)
+	result, restErr := services.CadastrarAluno(aluno)
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
@@ -29,33 +28,33 @@ func CadastrarAula(ctx *gin.Context) {
 	))
 }
 
-func ListarAulasDisciplina(ctx *gin.Context) {
-	idDisciplina := ctx.Param("disciplina")
+func TrancarAluno(ctx *gin.Context) {
+	id := ctx.Param("id")
 
-	result, restErr := services.ListarAulasDisciplina(idDisciplina)
+	result, restErr := services.AtualizarAluno(id, true)
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
 	}
 
 	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
-		"Aula resgatadas com sucesso",
+		"Aula cadastrada com sucesso",
 		http.StatusCreated,
 		result,
 	))
 }
 
-func GetAula(ctx *gin.Context) {
+func DestrancarAluno(ctx *gin.Context) {
 	id := ctx.Param("id")
 
-	result, restErr := services.GetAula(id)
+	result, restErr := services.AtualizarAluno(id, false)
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
 	}
 
 	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
-		"Aula resgatadas com sucesso",
+		"Aula cadastrada com sucesso",
 		http.StatusCreated,
 		result,
 	))
