@@ -43,3 +43,17 @@ func Login(ctx *gin.Context) {
 		"token":     token,
 	})
 }
+
+func RemoverProfessor(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	if restErr := services.RemoverProfessor(id); restErr != nil {
+		utils.RespondRestErr(restErr, ctx)
+	}
+
+	ctx.JSON(http.StatusNoContent, utils.NewAppMessage(
+		"Professor removido com sucesso",
+		http.StatusNoContent,
+		nil,
+	))
+}

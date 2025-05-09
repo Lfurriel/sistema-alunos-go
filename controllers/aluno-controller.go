@@ -28,23 +28,7 @@ func CadastrarAluno(ctx *gin.Context) {
 	))
 }
 
-func TrancarAluno(ctx *gin.Context) {
-	id := ctx.Param("id")
-
-	result, restErr := services.AtualizarAluno(id, true)
-
-	if restErr != nil {
-		utils.RespondRestErr(restErr, ctx)
-	}
-
-	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
-		"Aula cadastrada com sucesso",
-		http.StatusCreated,
-		result,
-	))
-}
-
-func DestrancarAluno(ctx *gin.Context) {
+func DesativarAluno(ctx *gin.Context) {
 	id := ctx.Param("id")
 
 	result, restErr := services.AtualizarAluno(id, false)
@@ -53,9 +37,40 @@ func DestrancarAluno(ctx *gin.Context) {
 		utils.RespondRestErr(restErr, ctx)
 	}
 
-	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
-		"Aula cadastrada com sucesso",
-		http.StatusCreated,
+	ctx.JSON(http.StatusOK, utils.NewAppMessage(
+		"Auluno desativado com sucesso",
+		http.StatusOK,
 		result,
+	))
+}
+
+func ReativarAluno(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	result, restErr := services.AtualizarAluno(id, true)
+
+	if restErr != nil {
+		utils.RespondRestErr(restErr, ctx)
+	}
+
+	ctx.JSON(http.StatusOK, utils.NewAppMessage(
+		"Aluno reativado com sucesso",
+		http.StatusOK,
+		result,
+	))
+}
+
+func RemoverAluno(ctx *gin.Context) {
+	id := ctx.Param("id")
+	restErr := services.RemoverAluno(id)
+
+	if restErr != nil {
+		utils.RespondRestErr(restErr, ctx)
+	}
+
+	ctx.JSON(http.StatusNoContent, utils.NewAppMessage(
+		"Aluno removido com sucesso",
+		http.StatusNoContent,
+		nil,
 	))
 }

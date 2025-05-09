@@ -20,14 +20,13 @@ func CadastrarProfessor(professor models.Professor) (*models.Professor, *utils.R
 	}
 	professor.ConfirmarSenha = ""
 
-	var profExist *models.Professor
-	err = database.DB.Where("email = ?", professor.Email).First(&profExist).Error
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao verificar se o professor já existe", err)
+	profExiste, restErr := buscaProfessorEmail(professor.Email)
+	if restErr != nil && restErr.Err != nil && !errors.Is(restErr.Err, gorm.ErrRecordNotFound) {
+		return nil, restErr
 	}
 
-	if profExist != nil && profExist.Id != "" {
-		return nil, utils.NewRestErr(http.StatusBadRequest, "Professor com email já cadastrado", nil)
+	if profExiste != nil && profExiste.Id != "" {
+		return nil, utils.NewRestErr(400, "Professor com email já cadastrado", nil)
 	}
 
 	err = database.DB.Create(&professor).Error
@@ -40,8 +39,7 @@ func CadastrarProfessor(professor models.Professor) (*models.Professor, *utils.R
 
 func Login(login models.Login) (string, *models.Professor, *utils.RestErr) {
 	var professor *models.Professor
-	err := database.DB.Where("email = ?", login.Email).First(&professor).Error
-	if err != nil {
+	if err := database.DB.Where("email = ?", login.Email).First(&professor).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return "", nil, utils.NewRestErr(http.StatusNotFound, "Professor não encontrado", err)
 		}
@@ -60,6 +58,18 @@ func Login(login models.Login) (string, *models.Professor, *utils.RestErr) {
 	return token, professor, nil
 }
 
+func RemoverProfessor(professorId string) *utils.RestErr {
+	professor, restErr := buscaProfessor(professorId)
+	if restErr != nil {
+		return restErr
+	}
+
+	if err := database.DB.Delete(&professor).Error; err != nil {
+		return utils.NewRestErr(http.StatusInternalServerError, "Erro ao remover professor", err)
+	}
+	return nil
+}
+
 func geraToken(professor *models.Professor) (string, error) {
 	secret := os.Getenv("JWT_SECRET")
 
@@ -70,4 +80,29 @@ func geraToken(professor *models.Professor) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(secret))
+}
+
+func buscaProfessor(id string) (*models.Professor, *utils.RestErr) {
+	var professor models.Professor
+	err := database.DB.Find(&professor, id).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, utils.NewRestErr(http.StatusNotFound, "Professor não encontrado", err)
+		}
+		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar professor", err)
+	}
+
+	return &professor, nil
+}
+
+func buscaProfessorEmail(email string) (*models.Professor, *utils.RestErr) {
+	var professor models.Professor
+	if err := database.DB.Where("email = ?", email).Find(&professor).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, utils.NewRestErr(http.StatusNotFound, "Professor não encontrado", err)
+		}
+		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar professor", err)
+	}
+
+	return &professor, nil
 }
