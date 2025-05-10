@@ -11,19 +11,19 @@ type AlunoAula struct {
 	AulaId    string    `json:"aula_id" gorm:"not null;column:aula_id"`
 	AlunoId   string    `json:"aluno_id" gorm:"not null;column:aluno_id" binding:"required"`
 	Presenca  bool      `json:"presenca" gorm:"column:not null;presenca" binding:"required"`
-	CreatedAt time.Time `json:"createdAt" gorm:"autoCreateTime;column:created_at;not null"`
-	UpdatedAt time.Time `json:"updatedAt" gorm:"autoUpdateTime;column:updated_at;not null"`
+	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime;column:created_at;not null"`
+	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime;column:updated_at;not null"`
 
 	// Relacionamento
-	Aula  Aula  `gorm:"foreignKey:AulaId;constraint:OnDelete:CASCADE"`
-	Aluno Aluno `gorm:"foreignKey:AlunoId;constraint:OnDelete:CASCADE"`
+	Aula  Aula  `json:"-" gorm:"foreignKey:AulaId;constraint:OnDelete:CASCADE"`
+	Aluno Aluno `json:"-" gorm:"foreignKey:AlunoId;constraint:OnDelete:CASCADE"`
 }
 
 func (AlunoAula) TableName() string {
 	return "aluno_aula"
 }
 
-func (aa *AlunoAula) BeforeCreate(tx *gorm.DB) (err error) {
+func (aa AlunoAula) BeforeCreate(_ *gorm.DB) (err error) {
 	uuidStr := uuid.New().String()
 	aa.Id = uuidStr
 	return

@@ -20,11 +20,19 @@ func RespondRestErr(err *RestErr, ctx *gin.Context) {
 		fmt.Println(err.Err.Error())
 	}
 
-	ctx.JSON(err.Code, NewAppMessage(
-		err.Msg,
-		err.Code,
-		nil,
-	))
+	if err != nil {
+		ctx.JSON(err.Code, NewAppMessage(
+			err.Msg,
+			err.Code,
+			nil,
+		))
+	} else {
+		ctx.JSON(500, NewAppMessage(
+			"Erro interno",
+			500,
+			nil,
+		))
+	}
 
 	ctx.Abort()
 }

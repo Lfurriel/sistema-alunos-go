@@ -8,10 +8,10 @@ import (
 
 type AlunoDisciplina struct {
 	Id           string    `json:"id" gorm:"primaryKey;column:id"`
-	AlunoId      string    `json:"alunoId" gorm:"not null;column:aluno_id"`
-	DisciplinaId string    `json:"disciplinaId" gorm:"not null;column:disciplina_id"`
-	CreatedAt    time.Time `json:"createdAt" gorm:"autoCreateTime;column:created_at;not null"`
-	UpdatedAt    time.Time `json:"updatedAt" gorm:"autoUpdateTime;column:updated_at;not null"`
+	AlunoId      string    `json:"aluno_id" gorm:"not null;column:aluno_id"`
+	DisciplinaId string    `json:"disciplina_id" gorm:"not null;column:disciplina_id"`
+	CreatedAt    time.Time `json:"created_at" gorm:"autoCreateTime;column:created_at;not null"`
+	UpdatedAt    time.Time `json:"updated_at" gorm:"autoUpdateTime;column:updated_at;not null"`
 
 	// Referências
 	Aluno      Aluno      `json:"-" gorm:"foreignKey:AlunoId;references:Id"`
@@ -22,7 +22,7 @@ func (AlunoDisciplina) TableName() string {
 	return "aluno_disciplina"
 }
 
-func (ad *AlunoDisciplina) BeforeCreate(tx *gorm.DB) (err error) {
+func (ad AlunoDisciplina) BeforeCreate(_ *gorm.DB) (err error) {
 	uuidStr := uuid.New().String()
 	ad.Id = uuidStr
 	return

@@ -1,11 +1,22 @@
 package validations
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"regexp"
+	"sistema-alunos-go/models"
+	"sistema-alunos-go/utils"
 	"strconv"
 	"strings"
 )
+
+func DisciplinaValida(disciplina *models.Disciplina, ctx *gin.Context) bool {
+	return utils.BindAndValidate(ctx, disciplina)
+}
+
+func AlunoDisciplinaValido(alunoDisciplina *models.AlunoDisciplina, ctx *gin.Context) bool {
+	return utils.BindAndValidate(ctx, alunoDisciplina)
+}
 
 func AnoSemestre(fl validator.FieldLevel) bool {
 	data := fl.Field().String()

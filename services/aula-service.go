@@ -58,15 +58,15 @@ func CadastrarAula(aula models.Aula) (*models.Aula, *utils.RestErr) {
 	return &aula, nil
 }
 
-func ListarAulasDisciplina(idDisciplina string) ([]models.Aula, *utils.RestErr) {
+func ListarAulasDisciplina(id string) ([]models.Aula, *utils.RestErr) {
 	var err error
 
-	if err := getDisciplina(idDisciplina); err != nil {
+	if err := getDisciplina(id); err != nil {
 		return nil, err
 	}
 
 	var aulas []models.Aula
-	err = database.DB.Where("disciplina_id = ?", idDisciplina).Find(&aulas).Error
+	err = database.DB.Where("disciplina_id = ?", id).Find(&aulas).Error
 	if err != nil {
 		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar aulas", err)
 	}
@@ -86,10 +86,10 @@ func GetAula(id string) (*models.Aula, *utils.RestErr) {
 	return aula, nil
 }
 
-func getDisciplina(idDisciplina string) *utils.RestErr {
+func getDisciplina(id string) *utils.RestErr {
 	var err error
 	var disciplina models.Disciplina
-	err = database.DB.First(&disciplina, idDisciplina).Error
+	err = database.DB.First(&disciplina, id).Error
 	if err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar disciplina", err)

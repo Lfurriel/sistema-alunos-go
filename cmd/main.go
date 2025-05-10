@@ -24,10 +24,11 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "3333"
+		port = "8080"
 	}
 
-	// Iniciar o servidor
+	if err := r.Run(":" + port); err != nil {
+		panic("Erro ao iniciar o servidor: " + err.Error())
+	}
 	log.Printf("Servidor rodando na porta %s...", port)
-	r.Run(":" + port)
 }

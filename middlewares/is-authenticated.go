@@ -18,7 +18,7 @@ func IsAuthenticated(ctx *gin.Context) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); ok {
 			return []byte(secret), nil
 		}
-		return nil, errors.New("Token inválido")
+		return nil, errors.New("token inválido")
 	})
 
 	if err != nil {

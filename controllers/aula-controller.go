@@ -9,8 +9,8 @@ import (
 	"sistema-alunos-go/validations"
 )
 
-// TODO: a aula deve receber os alunos presentes, e assim marcar a presença de cada aluno e falta dos que não aparecerem
 func CadastrarAula(ctx *gin.Context) {
+	// TODO: a aula deve receber os alunos presentes, e assim marcar a presença de cada aluno e falta dos que não aparecerem
 	var aula models.Aula
 	if !validations.AulaValida(&aula, ctx) {
 		return
@@ -30,9 +30,9 @@ func CadastrarAula(ctx *gin.Context) {
 }
 
 func ListarAulasDisciplina(ctx *gin.Context) {
-	idDisciplina := ctx.Param("disciplina")
+	disciplinaId := ctx.Param("disciplina")
 
-	result, restErr := services.ListarAulasDisciplina(idDisciplina)
+	result, restErr := services.ListarAulasDisciplina(disciplinaId)
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
