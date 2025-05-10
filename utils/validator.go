@@ -1,7 +1,10 @@
 package utils
 
 import (
+	"errors"
+	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"net/http"
 	"strings"
 )
 
@@ -55,4 +58,23 @@ func MapValidationError(err validator.FieldError) ValidationError {
 	}
 
 	return validationError
+}
+
+func BindAndValidate[T any](ctx *gin.Context, obj *T) bool {
+	if err := ctx.ShouldBindJSON(obj); err != nil {
+		var validationErrors validator.ValidationErrors
+		if errors.As(err, &validationErrors) {
+			var errorsList []ValidationError
+			for _, e := range validationErrors {
+				errorsList = append(errorsList, MapValidationError(e))
+			}
+
+			ctx.JSON(http.StatusBadRequest, NewAppMessage("Erro de Validação", http.StatusBadRequest, nil, errorsList))
+			return false
+		}
+
+		ctx.JSON(http.StatusBadRequest, NewAppMessage("Dados inválidos", http.StatusBadRequest, nil, err.Error()))
+		return false
+	}
+	return true
 }
