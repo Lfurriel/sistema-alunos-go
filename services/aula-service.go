@@ -9,25 +9,28 @@ import (
 	"sistema-alunos-go/utils"
 )
 
-func CadastrarAula(aula models.Aula) (*models.Aula, *utils.RestErr) {
-	var err error
-
-	if err := getDisciplina(aula.DisciplinaId); err != nil {
-		return nil, err
+func CadastrarAula(aula *models.Aula) (*models.Aula, *utils.RestErr) {
+	disciplina, restErr := getDisciplina(aula.DisciplinaId)
+	if restErr != nil {
+		return nil, restErr
 	}
 
-	var aulaExist *models.Aula
-	err = database.DB.Where("numero = ?", aula.Numero).First(&aulaExist).Error
+	disciplina.CargaHorariaRealizada += aula.QuantidadeHoras
+
+	if err := database.DB.Save(disciplina).Error; err != nil {
+		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao atualizar disciplina", err)
+	}
+
+	var aulaExist models.Aula
+	err := database.DB.Where("disciplina_id = ? AND numero = ?", aula.DisciplinaId, aula.Numero).First(&aulaExist).Error
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar aulas", err)
 	}
-
-	if aulaExist != nil && aulaExist.Id != "" {
-		return nil, utils.NewRestErr(http.StatusBadRequest, "Aula com esse número já cadastrada", nil)
+	if aulaExist.Id != "" {
+		return nil, utils.NewRestErr(http.StatusBadRequest, "Aula com esse número já cadastrada para a disciplina", nil)
 	}
 
-	err = database.DB.Create(&aula).Error
-	if err != nil {
+	if err := database.DB.Create(aula).Error; err != nil {
 		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao criar aula", err)
 	}
 
@@ -55,13 +58,14 @@ func CadastrarAula(aula models.Aula) (*models.Aula, *utils.RestErr) {
 	if err != nil {
 		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao registrar presença dos alunos", err)
 	}
-	return &aula, nil
+
+	return aula, nil
 }
 
 func ListarAulasDisciplina(id string) ([]models.Aula, *utils.RestErr) {
 	var err error
 
-	if err := getDisciplina(id); err != nil {
+	if _, err := getDisciplina(id); err != nil {
 		return nil, err
 	}
 
@@ -86,15 +90,15 @@ func GetAula(id string) (*models.Aula, *utils.RestErr) {
 	return aula, nil
 }
 
-func getDisciplina(id string) *utils.RestErr {
+func getDisciplina(id string) (*models.Disciplina, *utils.RestErr) {
 	var err error
 	var disciplina models.Disciplina
 	err = database.DB.First(&disciplina, id).Error
 	if err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			return utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar disciplina", err)
+			return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar disciplina", err)
 		}
-		return utils.NewRestErr(http.StatusInternalServerError, "Disciplina não existe", err)
+		return nil, utils.NewRestErr(http.StatusInternalServerError, "Disciplina não existe", err)
 	}
-	return nil
+	return &disciplina, nil
 }

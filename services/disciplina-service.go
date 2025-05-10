@@ -118,7 +118,6 @@ func FecharSemestre(disciplinaId string) ([]models.AlunoMedia, *utils.RestErr) {
 
 		aprovado := mediaFinal >= disciplina.NotaMinima && frequencia >= disciplina.FrequenciaMinima
 		medias = append(medias, models.AlunoMedia{
-			Id:           uuid.New().String(),
 			AlunoId:      ad.AlunoId,
 			DisciplinaId: disciplinaId,
 			MediaFinal:   mediaFinal,

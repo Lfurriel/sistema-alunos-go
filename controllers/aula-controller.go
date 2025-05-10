@@ -10,13 +10,12 @@ import (
 )
 
 func CadastrarAula(ctx *gin.Context) {
-	// TODO: a aula deve receber os alunos presentes, e assim marcar a presença de cada aluno e falta dos que não aparecerem
 	var aula models.Aula
 	if !validations.AulaValida(&aula, ctx) {
 		return
 	}
 
-	result, restErr := services.CadastrarAula(aula)
+	result, restErr := services.CadastrarAula(&aula)
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
