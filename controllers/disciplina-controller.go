@@ -52,6 +52,49 @@ func MatricularAluno(ctx *gin.Context) {
 	))
 }
 
+func AdicionarAvaliacao(ctx *gin.Context) {
+	disciplinaId := ctx.Param("id")
+
+	var avaliacao models.Avaliacao
+	if !validations.AvaliacaoValida(&avaliacao, ctx) {
+		return
+	}
+
+	result, restErr := services.AdicionarAvaliacao(avaliacao, disciplinaId)
+
+	if restErr != nil {
+		utils.RespondRestErr(restErr, ctx)
+	}
+
+	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
+		"Avaliação cadastrada com sucesso",
+		http.StatusCreated,
+		result,
+	))
+}
+
+func AdicionarNotaAvaliacao(ctx *gin.Context) {
+	disciplinaId := ctx.Param("disciplinaId")
+	avaliacaoId := ctx.Param("avaliacaoId")
+
+	var alunosNota []models.AlunoAvaliacao
+	if !validations.NotaValida(&alunosNota, ctx) {
+		return
+	}
+
+	result, restErr := services.AdicionarNotaAvaliacao(alunosNota, avaliacaoId, disciplinaId)
+
+	if restErr != nil {
+		utils.RespondRestErr(restErr, ctx)
+	}
+
+	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
+		"Notas adicionadas com sucesso",
+		http.StatusCreated,
+		result,
+	))
+}
+
 func ListarDisciplinas(ctx *gin.Context) {
 	professorId := getProfessorId(ctx)
 	if professorId == "" {

@@ -7,5 +7,5 @@ import (
 )
 
 func AlunoValido(aluno *models.Aluno, ctx *gin.Context) bool {
-	return utils.BindAndValidate(ctx, aluno)
+	return utils.BindAndValidate(aluno, ctx)
 }

@@ -8,7 +8,7 @@ import (
 
 type Avaliacao struct {
 	Id            string    `json:"id" gorm:"primaryKey;column:id"`
-	DisciplinaId  string    `json:"disciplina_id" gorm:"not null;column:disciplina_id" binding:"required"` // FK
+	DisciplinaId  string    `json:"disciplina_id" gorm:"not null;column:disciplina_id"` // FK
 	Nome          string    `json:"nome" gorm:"not null;column:nome" binding:"required,min=1,max=60"`
 	Tipo          string    `json:"tipo" gorm:"not null;column:tipo" binding:"required,oneof=P T"`
 	DataAvaliacao string    `json:"data_avaliacao" gorm:"not null;column:data_avaliacao" binding:"required,data_valida"`

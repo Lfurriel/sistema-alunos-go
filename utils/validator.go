@@ -60,7 +60,7 @@ func MapValidationError(err validator.FieldError) ValidationError {
 	return validationError
 }
 
-func BindAndValidate[T any](ctx *gin.Context, obj *T) bool {
+func BindAndValidate[T any](obj *T, ctx *gin.Context) bool {
 	if err := ctx.ShouldBindJSON(obj); err != nil {
 		var validationErrors validator.ValidationErrors
 		if errors.As(err, &validationErrors) {

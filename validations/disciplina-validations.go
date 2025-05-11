@@ -11,11 +11,11 @@ import (
 )
 
 func DisciplinaValida(disciplina *models.Disciplina, ctx *gin.Context) bool {
-	return utils.BindAndValidate(ctx, disciplina)
+	return utils.BindAndValidate(disciplina, ctx)
 }
 
 func AlunoDisciplinaValido(alunoDisciplina *models.AlunoDisciplina, ctx *gin.Context) bool {
-	return utils.BindAndValidate(ctx, alunoDisciplina)
+	return utils.BindAndValidate(alunoDisciplina, ctx)
 }
 
 func AnoSemestre(fl validator.FieldLevel) bool {

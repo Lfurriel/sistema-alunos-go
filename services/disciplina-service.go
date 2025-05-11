@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"net/http"
 	"sistema-alunos-go/database"
@@ -38,6 +37,54 @@ func Matricular(alunoDisciplina models.AlunoDisciplina) (*models.AlunoDisciplina
 	}
 
 	return &alunoDisciplina, nil
+}
+
+func AdicionarAvaliacao(avaliacao models.Avaliacao, disciplinaId string) (*models.Avaliacao, *utils.RestErr) {
+	disciplina, restErr := buscaDisciplina(disciplinaId)
+	if restErr != nil {
+		return nil, restErr
+	}
+
+	avaliacao.DisciplinaId = disciplina.Id
+
+	if avaliacao.Tipo == "P" {
+		disciplina.QuantidadeProvas += 1
+	} else {
+		disciplina.QuantidadeTrabalhos += 1
+	}
+
+	if err := database.DB.Save(&disciplina).Error; err != nil {
+		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao atualizar disciplina", err)
+
+	}
+
+	if err := database.DB.Create(&avaliacao).Error; err != nil {
+		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao inserir avaliação", err)
+
+	}
+
+	return &avaliacao, nil
+}
+
+func AdicionarNotaAvaliacao(alunosNota []models.AlunoAvaliacao, avaliacaoId string, disciplinaId string) ([]models.AlunoAvaliacao, *utils.RestErr) {
+	if _, restErr := buscaDisciplina(disciplinaId); restErr != nil {
+		return nil, restErr
+	}
+
+	if _, restErr := buscaAvaliacao(avaliacaoId); restErr != nil {
+		return nil, restErr
+	}
+
+	for i := range alunosNota {
+		alunosNota[i].AvaliacaoId = avaliacaoId
+		alunosNota[i].DisciplinaId = disciplinaId
+	}
+
+	if err := database.DB.Create(&alunosNota).Error; err != nil {
+		return nil, utils.NewRestErr(500, "Erro ao salvar notas dos alunos", err)
+	}
+
+	return alunosNota, nil
 }
 
 func ListarDisciplinas(professorId string) ([]models.Disciplina, *utils.RestErr) {
@@ -169,4 +216,16 @@ func findNota(notas []models.AlunoAvaliacao, avaliacaoId string) float64 {
 		}
 	}
 	return 0.0
+}
+
+func buscaAvaliacao(id string) (*models.Avaliacao, *utils.RestErr) {
+	var avaliacao models.Avaliacao
+	if err := database.DB.Find(&avaliacao, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, utils.NewRestErr(http.StatusNotFound, "Avaliação não encontrada", err)
+		}
+		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar avaliação", err)
+	}
+
+	return &avaliacao, nil
 }

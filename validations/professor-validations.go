@@ -12,7 +12,7 @@ import (
 )
 
 func ProfessorValido(professor *models.Professor, ctx *gin.Context) bool {
-	if !utils.BindAndValidate(ctx, professor) {
+	if !utils.BindAndValidate(professor, ctx) {
 		return false
 	}
 
@@ -76,7 +76,7 @@ func DataValida(fl validator.FieldLevel) bool {
 
 func confirmaSenhasIguais(p *models.Professor) error {
 	if p.Senha != p.ConfirmarSenha {
-		return errors.New("As duas senhas devem ser iguais")
+		return errors.New("as duas senhas devem ser iguais")
 	}
 	return nil
 }
