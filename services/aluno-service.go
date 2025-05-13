@@ -40,6 +40,17 @@ func AtualizarAluno(alunoId string, ativo bool) (*models.Aluno, *utils.RestErr) 
 		return nil, utils.NewRestErr(400, "Aluno já está desativado", nil)
 	}
 
+	var alunoDisciplinas []models.AlunoDisciplina
+	if err := database.DB.Where("aluno_id = ?", alunoId).Find(&alunoDisciplinas).Error; err != nil {
+		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar disciplinas do aluno", err)
+	}
+
+	for _, ad := range alunoDisciplinas {
+		if err := atualizaQuantidadeAlunos(ad.DisciplinaId, ativo); err != nil {
+			return nil, err
+		}
+	}
+
 	aluno.Ativo = ativo
 	if err := database.DB.Save(&aluno).Error; err != nil {
 		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao atualizar aluno", err)
@@ -51,6 +62,17 @@ func RemoverAluno(id string) *utils.RestErr {
 	aluno, restErr := buscaAluno(id)
 	if restErr != nil {
 		return restErr
+	}
+
+	var alunoDisciplinas []models.AlunoDisciplina
+	if err := database.DB.Where("aluno_id = ?", id).Find(&alunoDisciplinas).Error; err != nil {
+		return utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar disciplinas do aluno", err)
+	}
+
+	for _, ad := range alunoDisciplinas {
+		if err := atualizaQuantidadeAlunos(ad.DisciplinaId, false); err != nil {
+			return err
+		}
 	}
 
 	if err := database.DB.Delete(&aluno).Error; err != nil {
@@ -69,6 +91,17 @@ func buscaAluno(id string) (*models.Aluno, *utils.RestErr) {
 		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar aluno", err)
 	}
 
+	var alunoDisciplinas []models.AlunoDisciplina
+	if err := database.DB.Where("aluno_id = ?", id).Find(&alunoDisciplinas).Error; err != nil {
+		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar disciplinas do aluno", err)
+	}
+
+	for _, ad := range alunoDisciplinas {
+		if err := atualizaQuantidadeAlunos(ad.DisciplinaId, false); err != nil {
+			return nil, err
+		}
+	}
+
 	return &aluno, nil
 }
 
@@ -82,4 +115,22 @@ func buscaAlunoEmail(email string) (*models.Aluno, *utils.RestErr) {
 	}
 
 	return &aluno, nil
+}
+
+func atualizaQuantidadeAlunos(id string, soma bool) *utils.RestErr {
+	disciplina, restErr := buscaDisciplina(id)
+	if restErr != nil {
+		return restErr
+	}
+	if soma {
+		disciplina.QuantidadeAlunos += 1
+	} else {
+		disciplina.QuantidadeAlunos -= 1
+	}
+
+	if err := database.DB.Save(&disciplina).Error; err != nil {
+		return utils.NewRestErr(http.StatusInternalServerError, "Erro ao atualizar quantidade de alunos", err)
+	}
+
+	return nil
 }

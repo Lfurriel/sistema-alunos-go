@@ -9,3 +9,7 @@ import (
 func AvaliacaoValida(avaliacao *models.Avaliacao, ctx *gin.Context) bool {
 	return utils.BindAndValidate(avaliacao, ctx)
 }
+
+func NotaValida(alunoNota *[]models.AlunoAvaliacao, ctx *gin.Context) bool {
+	return utils.BindAndValidate(alunoNota, ctx) //
+}

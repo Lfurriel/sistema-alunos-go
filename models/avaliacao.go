@@ -18,7 +18,7 @@ type Avaliacao struct {
 
 	// Relacionamento
 	Disciplina      Disciplina       `gorm:"foreignKey:DisciplinaId"`
-	AlunoAvaliacoes []AlunoAvaliacao `gorm:"foreignKey:AvaliacaoId"`
+	AlunoAvaliacoes []AlunoAvaliacao `gorm:"foreignKey:AvaliacaoId;constraint:OnDelete:CASCADE"`
 }
 
 func (Avaliacao) TableName() string {

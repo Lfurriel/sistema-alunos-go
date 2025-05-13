@@ -18,7 +18,7 @@ type Aula struct {
 
 	// Relacionamento
 	Disciplina Disciplina  `json:"disciplina" gorm:"foreignKey:DisciplinaId"`
-	AlunoAula  []AlunoAula `json:"aluno_aula" gorm:"foreignKey:AulaId"`
+	AlunoAula  []AlunoAula `json:"aluno_aula" gorm:"foreignKey:AulaId;constraint:OnDelete:CASCADE"`
 }
 
 func (Aula) TableName() string {

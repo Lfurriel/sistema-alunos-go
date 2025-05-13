@@ -16,8 +16,8 @@ type Aluno struct {
 
 	// Relacionamento
 	AlunoDisciplina []AlunoDisciplina `json:"aluno_disciplina" gorm:"foreignKey:AlunoId;constraint:OnDelete:CASCADE"`
-	AlunoAvaliacao  []AlunoAvaliacao  `json:"aluno_avaliacao" gorm:"foreignKey:AlunoId"`
-	AlunoAula       []AlunoAula       `json:"aluno_aula" gorm:"foreignKey:AlunoId"`
+	AlunoAvaliacao  []AlunoAvaliacao  `json:"aluno_avaliacao" gorm:"foreignKey:AlunoId;constraint:OnDelete:CASCADE"`
+	AlunoAula       []AlunoAula       `json:"aluno_aula" gorm:"foreignKey:AlunoId;constraint:OnDelete:CASCADE"`
 }
 
 func (Aluno) TableName() string {

@@ -14,10 +14,6 @@ func DisciplinaValida(disciplina *models.Disciplina, ctx *gin.Context) bool {
 	return utils.BindAndValidate(disciplina, ctx)
 }
 
-func AlunoDisciplinaValido(alunoDisciplina *models.AlunoDisciplina, ctx *gin.Context) bool {
-	return utils.BindAndValidate(alunoDisciplina, ctx)
-}
-
 func AnoSemestre(fl validator.FieldLevel) bool {
 	data := fl.Field().String()
 

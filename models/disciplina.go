@@ -22,7 +22,7 @@ type Disciplina struct {
 	UpdatedAt             time.Time `json:"updated_at" gorm:"autoUpdateTime;column:updated_at;not null"`
 
 	// Relacionamentos
-	Alunos    []Aluno   `gorm:"many2many:aluno_disciplinas;foreignKey:Id;joinForeignKey:DisciplinaId;References:Id;joinReferences:AlunoId"`
+	Alunos    []Aluno   `gorm:"many2many:aluno_disciplinas;foreignKey:Id;joinForeignKey:DisciplinaId;References:Id;joinReferences:AlunoId;constraint:OnDelete:CASCADE"`
 	Aulas     []Aula    `json:"aulas" gorm:"foreignKey:DisciplinaId;constraint:OnDelete:CASCADE"`
 	Professor Professor `gorm:"foreignKey:ProfessorId;constraint:OnDelete:SET NULL"`
 }

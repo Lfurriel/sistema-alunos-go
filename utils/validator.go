@@ -55,6 +55,9 @@ func MapValidationError(err validator.FieldError) ValidationError {
 	case "data_valida":
 		validationError.Expected = "Data de nascimento válida"
 		validationError.Message = "A data de nascimento deve estar no padrão yyyy-MM-dd"
+	case "ano_semestre":
+		validationError.Expected = "Ano-Semestre válido"
+		validationError.Message = "O campo ano-semestre deve estar no formato yyyy-01 ou yyyy-02"
 	}
 
 	return validationError

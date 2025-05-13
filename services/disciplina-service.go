@@ -17,14 +17,19 @@ func CadastrarDisciplina(disciplina models.Disciplina, professorId string) (*mod
 	return &disciplina, nil
 }
 
-func Matricular(alunoDisciplina models.AlunoDisciplina) (*models.AlunoDisciplina, *utils.RestErr) {
-	disciplina, restErr := buscaDisciplina(alunoDisciplina.DisciplinaId)
+func Matricular(disciplinaId string, alunoId string) (*models.AlunoDisciplina, *utils.RestErr) {
+	disciplina, restErr := buscaDisciplina(disciplinaId)
 	if restErr != nil {
 		return nil, restErr
 	}
 
-	if _, restErr := buscaAluno(alunoDisciplina.AlunoId); restErr != nil {
+	if _, restErr := buscaAluno(alunoId); restErr != nil {
 		return nil, restErr
+	}
+
+	alunoDisciplina := models.AlunoDisciplina{
+		DisciplinaId: disciplina.Id,
+		AlunoId:      alunoId,
 	}
 
 	if err := database.DB.Create(&alunoDisciplina).Error; err != nil {

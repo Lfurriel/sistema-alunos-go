@@ -29,7 +29,6 @@ func CadastrarAluno(ctx *gin.Context) {
 }
 
 func DesativarAluno(ctx *gin.Context) {
-	// TODO: atualizar a quantidade de alunos matriculados nas disciplinas que esse aluno esatava matriculado (-1)
 	id := ctx.Param("id")
 
 	result, restErr := services.AtualizarAluno(id, false)
@@ -46,7 +45,6 @@ func DesativarAluno(ctx *gin.Context) {
 }
 
 func ReativarAluno(ctx *gin.Context) {
-	// TODO: atualizar a quantidade de alunos matriculados nas disciplinas que esse aluno esatava matriculado (+1)
 	id := ctx.Param("id")
 
 	result, restErr := services.AtualizarAluno(id, true)
@@ -63,7 +61,6 @@ func ReativarAluno(ctx *gin.Context) {
 }
 
 func RemoverAluno(ctx *gin.Context) {
-	/* TODO: atualizar a quantidade de alunos matriculados nas disciplinas que esse aluno esatava matriculado (-1) e apagar os alunos-disciplina, aluno-avaliacao etc (talvez o delete on cascade resolva)*/
 	id := ctx.Param("id")
 	restErr := services.RemoverAluno(id)
 

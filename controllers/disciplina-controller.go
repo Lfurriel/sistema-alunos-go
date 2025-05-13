@@ -34,12 +34,10 @@ func CadastrarDisciplina(ctx *gin.Context) {
 }
 
 func MatricularAluno(ctx *gin.Context) {
-	var alunoDisciplina models.AlunoDisciplina
-	if !validations.AlunoDisciplinaValido(&alunoDisciplina, ctx) {
-		return
-	}
+	disciplinaId := ctx.Param("disciplinaId")
+	alunoId := ctx.Param("alunoId")
 
-	result, restErr := services.Matricular(alunoDisciplina)
+	result, restErr := services.Matricular(disciplinaId, alunoId)
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
