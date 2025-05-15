@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"os"
+	"sistema-alunos-go/models"
 	"time"
 )
 
@@ -51,5 +52,27 @@ func ConectaBD() {
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
+	migrate()
+
 	fmt.Println("Banco de dados conectado")
+}
+
+func migrate() {
+	err := DB.AutoMigrate(
+		&models.Professor{},
+		&models.Aluno{},
+		&models.Disciplina{},
+		&models.Avaliacao{},
+		&models.Aula{},
+		&models.AlunoDisciplina{},
+		&models.AlunoAvaliacao{},
+		&models.AlunoAula{},
+		&models.AlunoMedia{},
+	)
+
+	if err != nil {
+		log.Fatalf("Erro ao realizar AutoMigrate: %v", err)
+	}
+
+	fmt.Println("Migrações aplicadas com sucesso.")
 }
