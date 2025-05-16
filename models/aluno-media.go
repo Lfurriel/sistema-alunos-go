@@ -8,8 +8,8 @@ import (
 
 type AlunoMedia struct {
 	Id           string    `json:"id" gorm:"primaryKey;column:id"`
-	AlunoId      string    `json:"aluno_id" gorm:"not null;column:aluno_id"`
-	DisciplinaId string    `json:"disciplina_id" gorm:"not null;column:disciplina_id"`
+	AlunoId      string    `json:"aluno_id" gorm:"not null;column:aluno_id;index:idx_aluno_media_id"`
+	DisciplinaId string    `json:"disciplina_id" gorm:"not null;column:disciplina_id;index:idx_aluno_media_id"`
 	MediaFinal   float64   `json:"media_final" gorm:"column:media_final"`
 	Frequencia   float64   `json:"frequencia" gorm:"column:frequencia"`
 	Aprovado     bool      `json:"aprovado" gorm:"column:aprovado"`

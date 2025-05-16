@@ -8,8 +8,8 @@ import (
 
 type AlunoDisciplina struct {
 	Id           string    `json:"id" gorm:"primaryKey;column:id"`
-	AlunoId      string    `json:"aluno_id" gorm:"not null;column:aluno_id"`
-	DisciplinaId string    `json:"disciplina_id" gorm:"not null;column:disciplina_id"`
+	AlunoId      string    `json:"aluno_id" gorm:"not null;column:aluno_id;index:idx_aluno_disciplina_id"`
+	DisciplinaId string    `json:"disciplina_id" gorm:"not null;column:disciplina_id;index:idx_aluno_disciplina_id"`
 	CreatedAt    time.Time `json:"created_at" gorm:"autoCreateTime;column:created_at;not null"`
 	UpdatedAt    time.Time `json:"updated_at" gorm:"autoUpdateTime;column:updated_at;not null"`
 

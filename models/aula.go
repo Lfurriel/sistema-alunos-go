@@ -8,7 +8,7 @@ import (
 
 type Aula struct {
 	Id              string    `json:"id" gorm:"primaryKey;column:id"`
-	DisciplinaId    string    `json:"disciplina_id" gorm:"not null;column:disciplina_id"` // FK
+	DisciplinaId    string    `json:"disciplina_id" gorm:"not null;column:disciplina_id;index"` // FK
 	Numero          int       `json:"numero" gorm:"not null;column:numero" binding:"required,gte=1"`
 	Data            string    `json:"data" gorm:"not null;column:data" binding:"required,data_valida"`
 	QuantidadeHoras int       `json:"quantidade_horas" gorm:"not null;column:quantidade_horas" binding:"required,gte=1"`
