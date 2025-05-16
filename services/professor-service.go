@@ -34,6 +34,7 @@ func CadastrarProfessor(professor models.Professor) (*models.Professor, *utils.R
 		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao criar professor", err)
 	}
 
+	professor.Senha = ""
 	return &professor, nil
 }
 
