@@ -14,6 +14,16 @@ func CadastrarDisciplina(disciplina models.Disciplina, professorId string) (*mod
 	if err := database.DB.Create(&disciplina).Error; err != nil {
 		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao cadastrar disciplina", err)
 	}
+
+	var restErr *utils.RestErr
+	disciplina.Professor, restErr = buscaProfessor(professorId)
+	disciplina.Professor.Senha = ""
+	disciplina.Professor.Disciplinas = nil
+
+	if restErr != nil {
+		return nil, restErr
+	}
+
 	return &disciplina, nil
 }
 
@@ -187,7 +197,7 @@ func FecharSemestre(disciplinaId string) ([]models.AlunoMedia, *utils.RestErr) {
 
 func buscaDisciplina(id string) (*models.Disciplina, *utils.RestErr) {
 	var disciplina models.Disciplina
-	err := database.DB.Find(&disciplina, id).Error
+	err := database.DB.Where("id = ?", id).First(&disciplina).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, utils.NewRestErr(http.StatusNotFound, "Disciplina não encontrada", err)
@@ -225,7 +235,7 @@ func findNota(notas []models.AlunoAvaliacao, avaliacaoId string) float64 {
 
 func buscaAvaliacao(id string) (*models.Avaliacao, *utils.RestErr) {
 	var avaliacao models.Avaliacao
-	if err := database.DB.Find(&avaliacao, id).Error; err != nil {
+	if err := database.DB.First(&avaliacao, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, utils.NewRestErr(http.StatusNotFound, "Avaliação não encontrada", err)
 		}

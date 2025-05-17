@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
 )
 
 type RestErr struct {
@@ -17,7 +17,7 @@ func NewRestErr(code int, msg string, err error) *RestErr {
 
 func RespondRestErr(err *RestErr, ctx *gin.Context) {
 	if err != nil && err.Err != nil {
-		fmt.Println(err.Err.Error())
+		log.Printf("\033[31m[ERRO INTERNO] panic recuperado: %v\033[0m\n", err)
 	}
 
 	if err != nil {

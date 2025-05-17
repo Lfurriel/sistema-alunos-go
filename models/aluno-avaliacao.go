@@ -24,7 +24,7 @@ func (AlunoAvaliacao) TableName() string {
 	return "aluno_avaliacao"
 }
 
-func (aa AlunoAvaliacao) BeforeCreate(_ *gorm.DB) (err error) {
+func (aa *AlunoAvaliacao) BeforeCreate(_ *gorm.DB) (err error) {
 	uuidStr := uuid.New().String()
 	aa.Id = uuidStr
 	return

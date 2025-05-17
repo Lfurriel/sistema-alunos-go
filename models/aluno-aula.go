@@ -23,7 +23,7 @@ func (AlunoAula) TableName() string {
 	return "aluno_aula"
 }
 
-func (aa AlunoAula) BeforeCreate(_ *gorm.DB) (err error) {
+func (aa *AlunoAula) BeforeCreate(_ *gorm.DB) (err error) {
 	uuidStr := uuid.New().String()
 	aa.Id = uuidStr
 	return

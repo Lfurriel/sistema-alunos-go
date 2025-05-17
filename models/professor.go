@@ -15,7 +15,7 @@ type Professor struct {
 	CreatedAt      time.Time `json:"created_at" gorm:"autoCreateTime;column:created_at;not null"`
 	UpdatedAt      time.Time `json:"updated_at" gorm:"autoUpdateTime;column:updated_at;not null"`
 
-	Disciplinas []Disciplina `json:"disciplinas" gorm:"foreignKey:ProfessorId;constraint:OnDelete:CASCADE"`
+	Disciplinas []Disciplina `json:"disciplinas,omitempty" gorm:"foreignKey:ProfessorId;constraint:OnDelete:CASCADE"`
 }
 
 func (Professor) TableName() string {

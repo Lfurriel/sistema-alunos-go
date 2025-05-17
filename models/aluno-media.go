@@ -25,7 +25,7 @@ func (AlunoMedia) TableName() string {
 	return "aluno_media"
 }
 
-func (am AlunoMedia) BeforeCreate(_ *gorm.DB) (err error) {
+func (am *AlunoMedia) BeforeCreate(_ *gorm.DB) (err error) {
 	uuidStr := uuid.New().String()
 	am.Id = uuidStr
 	return

@@ -85,7 +85,7 @@ func geraToken(professor *models.Professor) (string, error) {
 
 func buscaProfessor(id string) (*models.Professor, *utils.RestErr) {
 	var professor models.Professor
-	err := database.DB.Find(&professor, id).Error
+	err := database.DB.Where("id = ?", id).First(&professor).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, utils.NewRestErr(http.StatusNotFound, "Professor não encontrado", err)

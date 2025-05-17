@@ -83,23 +83,13 @@ func RemoverAluno(id string) *utils.RestErr {
 
 func buscaAluno(id string) (*models.Aluno, *utils.RestErr) {
 	var aluno models.Aluno
-	err := database.DB.Find(&aluno, id).Error
+
+	err := database.DB.Where("id = ?", id).First(&aluno).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, utils.NewRestErr(http.StatusNotFound, "Aluno não encontrado", err)
 		}
 		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar aluno", err)
-	}
-
-	var alunoDisciplinas []models.AlunoDisciplina
-	if err := database.DB.Where("aluno_id = ?", id).Find(&alunoDisciplinas).Error; err != nil {
-		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar disciplinas do aluno", err)
-	}
-
-	for _, ad := range alunoDisciplinas {
-		if err := atualizaQuantidadeAlunos(ad.DisciplinaId, false); err != nil {
-			return nil, err
-		}
 	}
 
 	return &aluno, nil

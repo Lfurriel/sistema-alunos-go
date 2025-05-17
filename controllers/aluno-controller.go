@@ -23,7 +23,7 @@ func CadastrarAluno(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
-		"Aula cadastrada com sucesso",
+		"Aluno cadastrado com sucesso",
 		http.StatusCreated,
 		result,
 	))
@@ -40,7 +40,7 @@ func DesativarAluno(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, utils.NewAppMessage(
-		"Auluno desativado com sucesso",
+		"Aluno desativado com sucesso",
 		http.StatusOK,
 		result,
 	))
