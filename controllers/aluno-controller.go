@@ -19,6 +19,7 @@ func CadastrarAluno(ctx *gin.Context) {
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
+		return
 	}
 
 	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
@@ -35,6 +36,7 @@ func DesativarAluno(ctx *gin.Context) {
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
+		return
 	}
 
 	ctx.JSON(http.StatusOK, utils.NewAppMessage(
@@ -51,6 +53,7 @@ func ReativarAluno(ctx *gin.Context) {
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
+		return
 	}
 
 	ctx.JSON(http.StatusOK, utils.NewAppMessage(
@@ -66,6 +69,7 @@ func RemoverAluno(ctx *gin.Context) {
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
+		return
 	}
 
 	ctx.JSON(http.StatusNoContent, utils.NewAppMessage(

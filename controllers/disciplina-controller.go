@@ -24,6 +24,7 @@ func CadastrarDisciplina(ctx *gin.Context) {
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
+		return
 	}
 
 	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
@@ -41,6 +42,7 @@ func MatricularAluno(ctx *gin.Context) {
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
+		return
 	}
 
 	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
@@ -62,6 +64,7 @@ func AdicionarAvaliacao(ctx *gin.Context) {
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
+		return
 	}
 
 	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
@@ -84,6 +87,7 @@ func AdicionarNotaAvaliacao(ctx *gin.Context) {
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
+		return
 	}
 
 	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
@@ -103,6 +107,7 @@ func ListarDisciplinas(ctx *gin.Context) {
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
+		return
 	}
 
 	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
@@ -119,6 +124,7 @@ func FecharSemestre(ctx *gin.Context) {
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
+		return
 	}
 
 	ctx.JSON(http.StatusCreated, utils.NewAppMessage(

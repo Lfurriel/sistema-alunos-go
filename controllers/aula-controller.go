@@ -19,6 +19,7 @@ func CadastrarAula(ctx *gin.Context) {
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
+		return
 	}
 
 	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
@@ -35,6 +36,7 @@ func ListarAulasDisciplina(ctx *gin.Context) {
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
+		return
 	}
 
 	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
@@ -51,6 +53,7 @@ func GetAula(ctx *gin.Context) {
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
+		return
 	}
 
 	ctx.JSON(http.StatusCreated, utils.NewAppMessage(

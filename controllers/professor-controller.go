@@ -18,6 +18,7 @@ func CadastrarProfessor(ctx *gin.Context) {
 	result, restErr := services.CadastrarProfessor(professor)
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
+		return
 	}
 
 	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
@@ -49,6 +50,7 @@ func RemoverProfessor(ctx *gin.Context) {
 
 	if restErr := services.RemoverProfessor(id); restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
+		return
 	}
 
 	ctx.JSON(http.StatusNoContent, utils.NewAppMessage(
