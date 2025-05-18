@@ -10,13 +10,13 @@ type AlunoAula struct {
 	Id        string    `json:"id" gorm:"primaryKey;column:id;type:varchar(36)"`
 	AulaId    string    `json:"aula_id" gorm:"not null;column:aula_id"`
 	AlunoId   string    `json:"aluno_id" gorm:"not null;column:aluno_id" binding:"required"`
-	Presenca  bool      `json:"presenca" gorm:"column:not null;presenca" binding:"required"`
+	Presenca  bool      `json:"presenca" gorm:"column:presenca;not null" binding:"required"`
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime;column:created_at;not null"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime;column:updated_at;not null"`
 
 	// Relacionamento
 	Aula  Aula  `json:"-" gorm:"foreignKey:AulaId"`
-	Aluno Aluno `json:"-" gorm:"foreignKey:AlunoId"`
+	Aluno Aluno `json:"aluno" gorm:"foreignKey:AlunoId"`
 }
 
 func (AlunoAula) TableName() string {

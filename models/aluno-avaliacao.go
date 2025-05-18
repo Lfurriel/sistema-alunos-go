@@ -16,8 +16,8 @@ type AlunoAvaliacao struct {
 	UpdatedAt    time.Time `json:"updated_at" gorm:"autoUpdateTime;column:updated_at;not null"`
 
 	// Relacionamentos
-	Aluno     Aluno     `json:"-" gorm:"foreignKey:AlunoId;references:Id"`
-	Avaliacao Avaliacao `json:"-" gorm:"foreignKey:AvaliacaoId;references:Id"`
+	Aluno     *Aluno     `json:"-" gorm:"foreignKey:AlunoId;references:Id"`
+	Avaliacao *Avaliacao `json:"-" gorm:"foreignKey:AvaliacaoId;references:Id"`
 }
 
 func (AlunoAvaliacao) TableName() string {

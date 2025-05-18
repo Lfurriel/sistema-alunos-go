@@ -22,9 +22,10 @@ type Disciplina struct {
 	UpdatedAt             time.Time `json:"updated_at" gorm:"autoUpdateTime;column:updated_at;not null"`
 
 	// Relacionamentos
-	Alunos    []Aluno    `json:"alunos,omitempty" gorm:"many2many:aluno_disciplina;foreignKey:Id;joinForeignKey:DisciplinaId;References:Id;joinReferences:AlunoId;constraint:OnDelete:CASCADE"`
-	Aulas     []Aula     `json:"aulas,omitempty" gorm:"foreignKey:DisciplinaId;constraint:OnDelete:CASCADE"`
-	Professor *Professor `json:"professor,omitempty" gorm:"foreignKey:ProfessorId;constraint:OnDelete:SET NULL"`
+	Alunos     []Aluno     `json:"alunos,omitempty" gorm:"many2many:aluno_disciplina;foreignKey:Id;joinForeignKey:DisciplinaId;References:Id;joinReferences:AlunoId;constraint:OnDelete:CASCADE"`
+	Aulas      []Aula      `json:"aulas,omitempty" gorm:"foreignKey:DisciplinaId;constraint:OnDelete:CASCADE"`
+	Avaliacoes []Avaliacao `json:"avaliacoes,omitempty" gorm:"foreignKey:DisciplinaId;constraint:OnDelete:CASCADE"`
+	Professor  *Professor  `json:"professor,omitempty" gorm:"foreignKey:ProfessorId;constraint:OnDelete:SET NULL"`
 }
 
 func (Disciplina) TableName() string {

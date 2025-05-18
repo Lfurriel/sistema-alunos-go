@@ -10,12 +10,14 @@ import (
 )
 
 func CadastrarAula(ctx *gin.Context) {
+	disciplinaId := ctx.Param("disciplinaId")
+
 	var aula models.Aula
 	if !validations.AulaValida(&aula, ctx) {
 		return
 	}
 
-	result, restErr := services.CadastrarAula(&aula)
+	result, restErr := services.CadastrarAula(&aula, disciplinaId)
 
 	if restErr != nil {
 		utils.RespondRestErr(restErr, ctx)
@@ -30,7 +32,7 @@ func CadastrarAula(ctx *gin.Context) {
 }
 
 func ListarAulasDisciplina(ctx *gin.Context) {
-	disciplinaId := ctx.Param("disciplina")
+	disciplinaId := ctx.Param("disciplinaId")
 
 	result, restErr := services.ListarAulasDisciplina(disciplinaId)
 

@@ -104,10 +104,14 @@ func AdicionarNotaAvaliacao(alunosNota []models.AlunoAvaliacao, avaliacaoId stri
 
 func ListarDisciplinas(professorId string) ([]models.Disciplina, *utils.RestErr) {
 	var disciplinas []models.Disciplina
-	err := database.DB.Where("professor_id = ?", professorId).Find(&disciplinas).Error
+
+	err := database.DB.Preload("Alunos").Preload("Aulas").Preload("Avaliacoes").
+		Where("professor_id = ?", professorId).Find(&disciplinas).Error
+
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar disciplina", err)
+		return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar disciplinas", err)
 	}
+
 	return disciplinas, nil
 }
 
@@ -235,7 +239,7 @@ func findNota(notas []models.AlunoAvaliacao, avaliacaoId string) float64 {
 
 func buscaAvaliacao(id string) (*models.Avaliacao, *utils.RestErr) {
 	var avaliacao models.Avaliacao
-	if err := database.DB.First(&avaliacao, id).Error; err != nil {
+	if err := database.DB.Where("id = ?", id).Find(&avaliacao).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, utils.NewRestErr(http.StatusNotFound, "Avaliação não encontrada", err)
 		}

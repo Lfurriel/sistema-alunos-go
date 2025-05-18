@@ -35,8 +35,8 @@ func CadastrarDisciplina(ctx *gin.Context) {
 }
 
 func MatricularAluno(ctx *gin.Context) {
-	disciplinaId := ctx.Param("disciplinaId")
-	alunoId := ctx.Param("alunoId")
+	disciplinaId := ctx.Query("disciplinaId")
+	alunoId := ctx.Query("alunoId")
 
 	result, restErr := services.Matricular(disciplinaId, alunoId)
 
@@ -46,14 +46,14 @@ func MatricularAluno(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusCreated, utils.NewAppMessage(
-		"Disciplina cadastrada com sucesso",
+		"Aluno matriculado com sucesso",
 		http.StatusCreated,
 		result,
 	))
 }
 
 func AdicionarAvaliacao(ctx *gin.Context) {
-	disciplinaId := ctx.Param("id")
+	disciplinaId := ctx.Param("disciplinaId")
 
 	var avaliacao models.Avaliacao
 	if !validations.AvaliacaoValida(&avaliacao, ctx) {
@@ -118,7 +118,7 @@ func ListarDisciplinas(ctx *gin.Context) {
 }
 
 func FecharSemestre(ctx *gin.Context) {
-	disciplinaId := ctx.Param("id")
+	disciplinaId := ctx.Param("disciplinaId")
 
 	result, restErr := services.FecharSemestre(disciplinaId)
 

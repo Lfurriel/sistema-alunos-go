@@ -17,8 +17,8 @@ type Aula struct {
 	UpdatedAt       time.Time `json:"updated_at" gorm:"autoUpdateTime;column:updated_at;not null"`
 
 	// Relacionamento
-	Disciplina Disciplina  `json:"disciplina" gorm:"foreignKey:DisciplinaId"`
-	AlunoAula  []AlunoAula `json:"aluno_aula" gorm:"foreignKey:AulaId;constraint:OnDelete:CASCADE"`
+	Disciplina *Disciplina `json:"disciplina,omitempty" gorm:"foreignKey:DisciplinaId"`
+	AlunoAula  []AlunoAula `json:"aluno_aula" gorm:"foreignKey:AulaId;constraint:OnDelete:CASCADE" binding:"required"`
 }
 
 func (Aula) TableName() string {

@@ -8,7 +8,7 @@ import (
 
 type Avaliacao struct {
 	Id            string    `json:"id" gorm:"primaryKey;column:id"`
-	DisciplinaId  string    `json:"disciplina_id" gorm:"not null;column:disciplina_id;uniqueIndex:idx_unique_avaliacao"` // FK
+	DisciplinaId  string    `json:"disciplina_id" gorm:"not null;column:disciplina_id;index:idx_avaliacao"` // FK
 	Nome          string    `json:"nome" gorm:"not null;column:nome" binding:"required,min=1,max=60"`
 	Tipo          string    `json:"tipo" gorm:"not null;column:tipo" binding:"required,oneof=P T"`
 	DataAvaliacao string    `json:"data_avaliacao" gorm:"not null;column:data_avaliacao" binding:"required,data_valida"`
@@ -17,8 +17,8 @@ type Avaliacao struct {
 	UpdatedAt     time.Time `json:"updated_at" gorm:"autoUpdateTime;column:updated_at;not null"`
 
 	// Relacionamento
-	Disciplina      Disciplina       `gorm:"foreignKey:DisciplinaId"`
-	AlunoAvaliacoes []AlunoAvaliacao `gorm:"foreignKey:AvaliacaoId;constraint:OnDelete:CASCADE"`
+	Disciplina      *Disciplina      `json:"disciplina,omitempty" gorm:"foreignKey:DisciplinaId"`
+	AlunoAvaliacoes []AlunoAvaliacao `json:"aluno_avaliacoes,omitempty" gorm:"foreignKey:AvaliacaoId;constraint:OnDelete:CASCADE"`
 }
 
 func (Avaliacao) TableName() string {

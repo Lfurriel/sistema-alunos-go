@@ -19,8 +19,8 @@ func RegistraRotas(router *gin.Engine) {
 
 	{
 		aula := api.Group("/aula")
-		aula.POST("/", middleware.IsAuthenticated, controllers.CadastrarAula)
-		aula.GET("/disciplina/:disciplina", middleware.IsAuthenticated, controllers.ListarAulasDisciplina)
+		aula.POST("/:disciplinaId", middleware.IsAuthenticated, controllers.CadastrarAula)
+		aula.GET("/disciplina/:disciplinaId", middleware.IsAuthenticated, controllers.ListarAulasDisciplina)
 		aula.GET("/:id", middleware.IsAuthenticated, controllers.GetAula)
 	}
 
@@ -28,10 +28,10 @@ func RegistraRotas(router *gin.Engine) {
 		disciplina := api.Group("disciplina")
 		disciplina.POST("/", middleware.IsAuthenticated, controllers.CadastrarDisciplina)
 		disciplina.POST("/matricular", middleware.IsAuthenticated, controllers.MatricularAluno)
-		disciplina.POST("/avaliacao", middleware.IsAuthenticated, controllers.AdicionarAvaliacao)
-		disciplina.POST("/avaliacao/nota", middleware.IsAuthenticated, controllers.AdicionarNotaAvaliacao)
+		disciplina.POST("/avaliacao/:disciplinaId", middleware.IsAuthenticated, controllers.AdicionarAvaliacao)
+		disciplina.POST("/avaliacao/:disciplinaId/nota/:avaliacaoId", middleware.IsAuthenticated, controllers.AdicionarNotaAvaliacao)
 		disciplina.GET("/", middleware.IsAuthenticated, controllers.ListarDisciplinas)
-		disciplina.GET("/fechar-semestre", middleware.IsAuthenticated, controllers.FecharSemestre)
+		disciplina.GET("/fechar-semestre/:disciplinaId", middleware.IsAuthenticated, controllers.FecharSemestre)
 	}
 
 	{
