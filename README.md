@@ -57,35 +57,3 @@ JWT_SECRET=sua_chave_secreta_super_segura
 ```
 
 A aplicação deve subir na porta `localhost:3333` (ou conforme definido no seu .env).
-
----
-
-## 🧭 Endpoints Disponíveis
-
-### Criar um novo professor
-
-**POST** /professor
-
-- Body (JSON):
-
-```json
-{
-  "nome": "Geraldo da Silva",
-  "email": "geraldo@example.com",
-  "senha": "senha#Forte123",
-  "confirmar_senha": "senha#Forte123"
-}
-```
-
-### Login de professor
-
-**POST** /professor/login
-
-- Body (JSON):
-
-```json
-{
-  "email": "geraldo@example.com",
-  "senha": "senha#Forte123"
-}
-```
