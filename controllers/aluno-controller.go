@@ -9,6 +9,11 @@ import (
 	"sistema-alunos-go/validations"
 )
 
+// CadastrarAluno trata a requisição de cadastro de um novo aluno.
+//
+// # Valida os dados recebidos via JSON no corpo da requisição, chama o serviço de cadastro e retorna o aluno criado com status 201
+//
+// Em caso de erro de validação ou persistência, retorna um erro estruturado.
 func CadastrarAluno(ctx *gin.Context) {
 	var aluno models.Aluno
 	if !validations.AlunoValido(&aluno, ctx) {
@@ -29,6 +34,11 @@ func CadastrarAluno(ctx *gin.Context) {
 	))
 }
 
+// DesativarAluno trata a requisição para desativar um aluno (trancar matrícula).
+//
+// O ID do aluno é obtido via parâmetro de rota. Marca o aluno como inativo e retorna a entidade atualizada com status 200
+//
+// Em caso de erro, retorna uma resposta padronizada com código e mensagem.
 func DesativarAluno(ctx *gin.Context) {
 	id := ctx.Param("id")
 
@@ -46,6 +56,11 @@ func DesativarAluno(ctx *gin.Context) {
 	))
 }
 
+// ReativarAluno trata a requisição para reativar um aluno (destrancar matrícula).
+//
+// O ID do aluno é obtido via parâmetro de rota. Marca o aluno como ativo e retorna a entidade atualizada com status 200
+//
+// Em caso de erro, retorna uma resposta padronizada com código e mensagem.
 func ReativarAluno(ctx *gin.Context) {
 	id := ctx.Param("id")
 
@@ -63,6 +78,9 @@ func ReativarAluno(ctx *gin.Context) {
 	))
 }
 
+// RemoverAluno trata a requisição de exclusão definitiva de um aluno
+//
+// O ID do aluno é obtido via parâmetro de rota. Remove o aluno do banco de dados e retorna status 204 (No Content)
 func RemoverAluno(ctx *gin.Context) {
 	id := ctx.Param("id")
 	restErr := services.RemoverAluno(id)

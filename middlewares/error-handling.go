@@ -7,6 +7,7 @@ import (
 	"sistema-alunos-go/utils"
 )
 
+// ErrorHandlingMiddleware handles and recovers from panics within middleware or handlers, logging errors and responding with HTTP 500.
 func ErrorHandlingMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		defer func() {

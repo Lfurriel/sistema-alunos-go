@@ -9,10 +9,17 @@ import (
 	"sistema-alunos-go/utils"
 )
 
+// CadastrarAula registra uma nova aula para uma disciplina
+//
+// A função recebe os dados da aula e o ID da disciplina à qual ela pertence
+// Antes de cadastrar, verifica se já existe uma aula com o mesmo número naquela disciplina
+// Também atualiza a carga horária realizada da disciplina
+//
+// Retorna a aula cadastrada ou um erro, caso haja falha de validação ou de persistência
 func CadastrarAula(aula *models.Aula, disciplinaId string) (*models.Aula, *utils.RestErr) {
 	aula.DisciplinaId = disciplinaId
 
-	disciplina, restErr := getDisciplina(aula.DisciplinaId)
+	disciplina, restErr := buscaDisciplina(aula.DisciplinaId)
 	if restErr != nil {
 		return nil, restErr
 	}
@@ -39,10 +46,16 @@ func CadastrarAula(aula *models.Aula, disciplinaId string) (*models.Aula, *utils
 	return aula, nil
 }
 
+// ListarAulasDisciplina retorna todas as aulas relacionadas a uma disciplina
+//
+// A função busca todas as aulas associadas ao ID da disciplina fornecida, incluindo a lista de presenças (`AlunoAula`)
+// e os respectivos dados dos alunos
+//
+// Retorna uma lista de aulas com suas respectivas presenças, ou erro caso a disciplina não exista ou a consulta falhe.
 func ListarAulasDisciplina(id string) ([]models.Aula, *utils.RestErr) {
 	var err error
 
-	if _, err := getDisciplina(id); err != nil {
+	if _, err := buscaDisciplina(id); err != nil {
 		return nil, err
 	}
 
@@ -55,6 +68,11 @@ func ListarAulasDisciplina(id string) ([]models.Aula, *utils.RestErr) {
 	return aulas, nil
 }
 
+// GetAula retorna os detalhes de uma aula específica.
+//
+// A função busca uma aula pelo seu ID, incluindo os registros de presença (`AlunoAula`) e os dados dos alunos presentes.
+//
+// Retorna a aula encontrada ou um erro caso ocorra falha na busca.
 func GetAula(id string) (*models.Aula, *utils.RestErr) {
 	var err error
 
@@ -65,17 +83,4 @@ func GetAula(id string) (*models.Aula, *utils.RestErr) {
 	}
 
 	return aula, nil
-}
-
-func getDisciplina(id string) (*models.Disciplina, *utils.RestErr) {
-	var err error
-	var disciplina models.Disciplina
-	err = database.DB.Where("id = ?", id).Find(&disciplina).Error
-	if err != nil {
-		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, utils.NewRestErr(http.StatusInternalServerError, "Erro ao buscar disciplina", err)
-		}
-		return nil, utils.NewRestErr(http.StatusInternalServerError, "Disciplina não existe", err)
-	}
-	return &disciplina, nil
 }

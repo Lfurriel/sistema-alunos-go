@@ -9,6 +9,12 @@ import (
 	"sistema-alunos-go/utils"
 )
 
+// CadastrarAluno insere um novo aluno no banco.
+//
+// Ele verifica se já existe um aluno com o mesmo e-mail.
+// Se não houver, ativa o aluno e o salva.
+//
+// Retorna o aluno cadastrado ou um erro, caso ocorra falha na verificação ou na criação.
 func CadastrarAluno(aluno models.Aluno) (*models.Aluno, *utils.RestErr) {
 	alunoExiste, restErr := buscaAlunoEmail(aluno.Email)
 	if restErr != nil && restErr.Err != nil && !errors.Is(restErr.Err, gorm.ErrRecordNotFound) {
@@ -26,6 +32,16 @@ func CadastrarAluno(aluno models.Aluno) (*models.Aluno, *utils.RestErr) {
 	return &aluno, nil
 }
 
+// AtualizarAluno ativa ou desativa o aluno no banco de dados
+//
+// Ela primeiramente busca o aluno no banco de dados para verificar a existência
+// Então verifica se o aluno já se encontra no status que o usuário esta tentando atualizar
+// Caso não esteja, o aluno é ativado/desativado e salva no banco
+//
+// As disciplinas em que o aluno está matriculado é atualizada com a quantidade de alunos matriculados para mais (caso
+// esteja ativando o aluno) ou menos (caso contrário)
+//
+// Retorna o aluno com o novo status ou algum erro durante o processo
 func AtualizarAluno(alunoId string, ativo bool) (*models.Aluno, *utils.RestErr) {
 	aluno, restErr := buscaAluno(alunoId)
 	if restErr != nil {
@@ -58,6 +74,10 @@ func AtualizarAluno(alunoId string, ativo bool) (*models.Aluno, *utils.RestErr) 
 	return aluno, nil
 }
 
+// RemoverAluno apaga o registro da tabela "alunos" no banco de dados
+//
+// Ela primeiramente busca o aluno no banco para verificar a sua existência e então o remove
+// Retorna (caso ocorra) erro durante o processo de remoção do aluno
 func RemoverAluno(id string) *utils.RestErr {
 	aluno, restErr := buscaAluno(id)
 	if restErr != nil {
@@ -81,6 +101,9 @@ func RemoverAluno(id string) *utils.RestErr {
 	return nil
 }
 
+// buscaAluno busca um aluno pelo ID
+//
+// Retorna o aluno encontrado ou erro caso não exista ou a consulta falhe
 func buscaAluno(id string) (*models.Aluno, *utils.RestErr) {
 	var aluno models.Aluno
 
@@ -95,6 +118,9 @@ func buscaAluno(id string) (*models.Aluno, *utils.RestErr) {
 	return &aluno, nil
 }
 
+// buscaAlunoEmail busca um aluno com base no e-mail
+//
+// Retorna o aluno encontrado ou erro caso não exista ou a consulta falhe
 func buscaAlunoEmail(email string) (*models.Aluno, *utils.RestErr) {
 	var aluno models.Aluno
 	if err := database.DB.Where("email = ?", email).Find(&aluno).Error; err != nil {
@@ -107,6 +133,10 @@ func buscaAlunoEmail(email string) (*models.Aluno, *utils.RestErr) {
 	return &aluno, nil
 }
 
+// atualizaQuantidadeAlunos busca um disciplina com base no parâmetro 'id' e então atualiza a quantidade de alunos
+// matriculados na disciplina em questão
+//
+// Retorna erro caso ocurra durante a busca da disciplina no banco de dados ou a atualização
 func atualizaQuantidadeAlunos(id string, soma bool) *utils.RestErr {
 	disciplina, restErr := buscaDisciplina(id)
 	if restErr != nil {

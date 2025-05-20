@@ -8,12 +8,19 @@ import (
 	"strings"
 )
 
+// ValidationError representa um erro de validação de campo em uma requisição.
+//
+// Contém informações sobre o campo inválido, o valor esperado e uma mensagem de erro amigável.
 type ValidationError struct {
 	Expected string `json:"expected,omitempty"`
 	Path     string `json:"path,omitempty"`
 	Message  string `json:"message,omitempty"`
 }
 
+// MapValidationError converte um erro de validação do pacote validator para o formato personalizado ValidationError
+//
+// Analisa a tag de validação (`err.Tag()`) e retorna uma estrutura contendo mensagens de erro e valores esperados
+// mais legíveis para o cliente
 func MapValidationError(err validator.FieldError) ValidationError {
 	var validationError ValidationError
 	validationError.Message = "Required"
@@ -63,6 +70,13 @@ func MapValidationError(err validator.FieldError) ValidationError {
 	return validationError
 }
 
+// BindAndValidate realiza o bind dos dados do corpo da requisição JSON para a struct fornecida e
+// valida os campos com base nas tags de validação
+//
+// Em caso de erro de validação, envia uma resposta JSON com a lista de erros formatados
+// Em caso de erro genérico de bind, retorna uma mensagem genérica
+//
+// Retorna true se os dados forem válidos; caso contrário, false.
 func BindAndValidate[T any](obj *T, ctx *gin.Context) bool {
 	if err := ctx.ShouldBindJSON(obj); err != nil {
 		var validationErrors validator.ValidationErrors

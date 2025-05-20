@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+// Aluno representa um estudante matriculado no sistema
+//
+// Contém dados básicos de identificação, status de matrícula e relacionamentos com disciplinas, avaliações e aulas.
 type Aluno struct {
 	Id        string    `json:"id,omitempty" gorm:"primaryKey;column:id;type:varchar(36);not null"`
 	Nome      string    `json:"nome,omitempty" gorm:"type:varchar(60);column:nome;not null" binding:"required,min=1,max=60"`
@@ -20,10 +23,12 @@ type Aluno struct {
 	AlunoAula       []AlunoAula       `json:"aluno_aula,omitempty" gorm:"foreignKey:AlunoId;constraint:OnDelete:CASCADE"`
 }
 
+// TableName especifica o nome da tabela do banco de dados para a estrutura Aluno
 func (Aluno) TableName() string {
 	return "alunos"
 }
 
+// BeforeCreate é usado para o GORM que gera e atribui uma nova string UUID ao campo Id antes de um Aluno ser criado
 func (a *Aluno) BeforeCreate(_ *gorm.DB) (err error) {
 	uuidStr := uuid.New().String()
 	a.Id = uuidStr

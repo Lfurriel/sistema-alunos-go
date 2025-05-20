@@ -10,8 +10,17 @@ import (
 	"time"
 )
 
+// DB é a instância global de conexão com o banco de dados gerenciada pelo GORM
+//
+// Deve ser inicializada por meio da função ConectaBD()
 var DB *gorm.DB
 
+// ConectaBD inicializa a conexão com o banco de dados PostgreSQL usando variáveis de ambiente
+//
+// Define configurações de performance no GORM, como o uso de statements preparados e desativação de transações implícitas.
+// Após conectar, executa a função de migração automática
+//
+// Em caso de falha na conexão ou configuração, o programa é interrompido via log.Panic
 func ConectaBD() {
 	var errConnection error
 
@@ -57,6 +66,9 @@ func ConectaBD() {
 	fmt.Println("Banco de dados conectado")
 }
 
+// migrate aplica as migrações automáticas do GORM para todas as tabelas do sistema
+//
+// As structs dos modelos são registradas em ordem de dependência. Em caso de erro, a aplicação é finalizada com log.Fatalf.
 func migrate() {
 	err := DB.AutoMigrate(
 		&models.Professor{},

@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+// Disciplina representa uma matéria ministrada por um professor
+//
+// Contém informações sobre carga horária, número de provas, critérios de aprovação e relacionamentos com alunos, aulas,
+// avaliações e o professor responsável.
 type Disciplina struct {
 	Id                    string    `json:"id" gorm:"primaryKey;column:id;type:varchar(36)"`
 	Nome                  string    `json:"nome" gorm:"not null;column:nome;index" binding:"required,min=1,max=60"`
@@ -28,10 +32,12 @@ type Disciplina struct {
 	Professor  *Professor  `json:"professor,omitempty" gorm:"foreignKey:ProfessorId;constraint:OnDelete:SET NULL"`
 }
 
+// TableName especifica o nome da tabela do banco de dados para a estrutura Disciplina
 func (Disciplina) TableName() string {
 	return "disciplinas"
 }
 
+// BeforeCreate é usado para o GORM que gera e atribui uma nova string UUID ao campo Id antes de uma Disciplina ser criada
 func (a *Disciplina) BeforeCreate(_ *gorm.DB) (err error) {
 	uuidStr := uuid.New().String()
 	a.Id = uuidStr

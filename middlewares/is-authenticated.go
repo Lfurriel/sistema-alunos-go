@@ -10,9 +10,13 @@ import (
 	"strings"
 )
 
-func IsAuthenticated(ctx *gin.Context) {
+// Autenticado valida o token JWT do cabeçalho 'Authorization' da solicitação e identifica o ID do professor
+//
+// Retorna um erro HTTP 401 para tokens inválidos ou dados formatados incorretamente
+// Define o ID do professor no contexto Gin para solicitações autorizadas
+func Autenticado(ctx *gin.Context) {
 	secret := os.Getenv("JWT_SECRET")
-	tokenValue := removeBearerPrefix(ctx.Request.Header.Get("Authorization"))
+	tokenValue := removePrefixoBearer(ctx.Request.Header.Get("Authorization"))
 
 	token, err := jwt.Parse(tokenValue, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); ok {
@@ -45,6 +49,7 @@ func IsAuthenticated(ctx *gin.Context) {
 	ctx.Set("professor", professorId)
 }
 
-func removeBearerPrefix(token string) string {
+// removePrefixoBearer remove o prefixo "Bearer " de uma string recebida por parâmetro
+func removePrefixoBearer(token string) string {
 	return strings.TrimPrefix(token, "Bearer ")
 }

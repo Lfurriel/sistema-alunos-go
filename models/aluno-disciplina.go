@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+// AlunoDisciplina representa a matrícula de um aluno em uma disciplina
+//
+// Essa entidade intermedia a relação many-to-many entre alunos e disciplinas
 type AlunoDisciplina struct {
 	Id           string    `json:"id" gorm:"primaryKey;column:id"`
 	AlunoId      string    `json:"aluno_id" gorm:"not null;column:aluno_id;index:idx_aluno_disciplina_id"`
@@ -18,10 +21,12 @@ type AlunoDisciplina struct {
 	Disciplina Disciplina `json:"-" gorm:"foreignKey:DisciplinaId;references:Id"`
 }
 
+// TableName especifica o nome da tabela do banco de dados para a estrutura AlunoDisciplina
 func (AlunoDisciplina) TableName() string {
 	return "aluno_disciplina"
 }
 
+// BeforeCreate é usado para o GORM que gera e atribui uma nova string UUID ao campo Id antes de um AlunoDisciplina ser criado
 func (ad *AlunoDisciplina) BeforeCreate(_ *gorm.DB) (err error) {
 	uuidStr := uuid.New().String()
 	ad.Id = uuidStr

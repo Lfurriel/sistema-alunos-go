@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+// Aula representa um encontro presencial de uma disciplina
+//
+// Armazena o número da aula, data, duração e conteúdo abordado. Também relaciona os alunos presentes via registros de presença
 type Aula struct {
 	Id              string    `json:"id" gorm:"primaryKey;column:id"`
 	DisciplinaId    string    `json:"disciplina_id" gorm:"not null;column:disciplina_id;index"` // FK
@@ -21,10 +24,12 @@ type Aula struct {
 	AlunoAula  []AlunoAula `json:"aluno_aula" gorm:"foreignKey:AulaId;constraint:OnDelete:CASCADE" binding:"required"`
 }
 
+// TableName especifica o nome da tabela do banco de dados para a estrutura Aula
 func (Aula) TableName() string {
 	return "aulas"
 }
 
+// BeforeCreate é usado para o GORM que gera e atribui uma nova string UUID ao campo Id antes de uma Aula ser criada
 func (a *Aula) BeforeCreate(_ *gorm.DB) (err error) {
 	uuidStr := uuid.New().String()
 	a.Id = uuidStr

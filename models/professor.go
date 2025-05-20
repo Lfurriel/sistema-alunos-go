@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+// Professor representa um professor do sistema
+//
+// Contém dados de identificação, autenticação e o relacionamento com as disciplinas que ministra
 type Professor struct {
 	Id             string    `json:"id" gorm:"primaryKey;column:id;type:varchar(36)"`
 	Nome           string    `json:"nome" gorm:"not null;column:nome" binding:"required,min=1,max=60"`
@@ -18,16 +21,19 @@ type Professor struct {
 	Disciplinas []Disciplina `json:"disciplinas,omitempty" gorm:"foreignKey:ProfessorId;constraint:OnDelete:CASCADE"`
 }
 
+// TableName especifica o nome da tabela do banco de dados para a estrutura Professor
 func (Professor) TableName() string {
 	return "professores"
 }
 
+// BeforeCreate é usado para o GORM que gera e atribui uma nova string UUID ao campo Id antes de um Professor ser criado
 func (p *Professor) BeforeCreate(_ *gorm.DB) (err error) {
 	uuidStr := uuid.New().String()
 	p.Id = uuidStr
 	return
 }
 
+// Login representa as credenciais de login do professor
 type Login struct {
 	Email string `json:"email" binding:"required,email"`
 	Senha string `json:"senha" binding:"required"`

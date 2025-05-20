@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+// Avaliacao representa uma prova ou trabalho relacionado a uma disciplina
+//
+// Cada avaliação possui um tipo ("P" para prova, "T" para trabalho), uma data, peso e pertence a uma disciplina específica
 type Avaliacao struct {
 	Id            string    `json:"id" gorm:"primaryKey;column:id"`
 	DisciplinaId  string    `json:"disciplina_id" gorm:"not null;column:disciplina_id;index:idx_avaliacao"` // FK
@@ -21,10 +24,12 @@ type Avaliacao struct {
 	AlunoAvaliacoes []AlunoAvaliacao `json:"aluno_avaliacoes,omitempty" gorm:"foreignKey:AvaliacaoId;constraint:OnDelete:CASCADE"`
 }
 
+// TableName especifica o nome da tabela do banco de dados para a estrutura Avaliacao
 func (Avaliacao) TableName() string {
 	return "avaliacoes"
 }
 
+// BeforeCreate é usado para o GORM que gera e atribui uma nova string UUID ao campo Id antes de uma Avaliacao ser criada
 func (a *Avaliacao) BeforeCreate(_ *gorm.DB) (err error) {
 	uuidStr := uuid.New().String()
 	a.Id = uuidStr

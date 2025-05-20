@@ -9,6 +9,12 @@ import (
 	"sistema-alunos-go/validations"
 )
 
+// CadastrarAula trata a requisição de criação de uma nova aula para uma disciplina
+//
+// Valida o corpo da requisição, obtém o ID da disciplina via parâmetro de rota e chama o serviço para salvar a aula.
+// Também registra a presença dos alunos
+//
+// Retorna a aula criada com status 201 ou erro, se houver falha
 func CadastrarAula(ctx *gin.Context) {
 	disciplinaId := ctx.Param("disciplinaId")
 
@@ -31,6 +37,11 @@ func CadastrarAula(ctx *gin.Context) {
 	))
 }
 
+// ListarAulasDisciplina retorna todas as aulas cadastradas para uma disciplina específica
+//
+// O ID da disciplina é obtido via parâmetro de rota. A resposta inclui também os alunos presentes em cada aula
+//
+// Retorna status 201 com os dados ou erro em caso de falha
 func ListarAulasDisciplina(ctx *gin.Context) {
 	disciplinaId := ctx.Param("disciplinaId")
 
@@ -48,6 +59,11 @@ func ListarAulasDisciplina(ctx *gin.Context) {
 	))
 }
 
+// GetAula retorna os dados detalhados de uma aula específica pelo seu ID
+//
+// # A resposta inclui a presença dos alunos e demais informações da aula
+//
+// Retorna status 201 com os dados ou erro em caso de falha
 func GetAula(ctx *gin.Context) {
 	id := ctx.Param("id")
 

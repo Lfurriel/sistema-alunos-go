@@ -7,6 +7,7 @@ import (
 	"sistema-alunos-go/validations"
 )
 
+// BindingValidator registra funções de validação personalizadas para "senha_forte", "data_valida" e "ano_semestre"
 func BindingValidator() {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		if err := v.RegisterValidation("senha_forte", validations.SenhaForte); err != nil {

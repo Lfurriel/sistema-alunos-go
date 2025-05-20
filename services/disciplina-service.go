@@ -9,6 +9,12 @@ import (
 	"sistema-alunos-go/utils"
 )
 
+// CadastrarDisciplina registra uma nova disciplina associada a um professor
+//
+// Define o ID do professor na disciplina e salva no banco
+// Após o cadastro, busca os dados do professor para retornar no payload
+//
+// Retorna a disciplina criada ou erro, caso ocorra falha ao salvar ou buscar dados
 func CadastrarDisciplina(disciplina models.Disciplina, professorId string) (*models.Disciplina, *utils.RestErr) {
 	disciplina.ProfessorId = professorId
 	if err := database.DB.Create(&disciplina).Error; err != nil {
@@ -27,6 +33,11 @@ func CadastrarDisciplina(disciplina models.Disciplina, professorId string) (*mod
 	return &disciplina, nil
 }
 
+// Matricular associa um aluno a uma disciplina
+//
+// Cria um registro em aluno_disciplina e atualiza o contador de alunos da disciplina
+//
+// Retorna o vínculo criado ou erro em caso de falha
 func Matricular(disciplinaId string, alunoId string) (*models.AlunoDisciplina, *utils.RestErr) {
 	disciplina, restErr := buscaDisciplina(disciplinaId)
 	if restErr != nil {
@@ -54,6 +65,11 @@ func Matricular(disciplinaId string, alunoId string) (*models.AlunoDisciplina, *
 	return &alunoDisciplina, nil
 }
 
+// AdicionarAvaliacao adiciona uma nova avaliação (prova ou trabalho) a uma disciplina
+//
+// # Atualiza os contadores de provas ou trabalhos na disciplina com base no tipo de avaliação
+//
+// Retorna a avaliação criada ou erro em caso de falha
 func AdicionarAvaliacao(avaliacao models.Avaliacao, disciplinaId string) (*models.Avaliacao, *utils.RestErr) {
 	disciplina, restErr := buscaDisciplina(disciplinaId)
 	if restErr != nil {
@@ -81,6 +97,11 @@ func AdicionarAvaliacao(avaliacao models.Avaliacao, disciplinaId string) (*model
 	return &avaliacao, nil
 }
 
+// AdicionarNotaAvaliacao associa uma lista de notas de alunos a uma determinada avaliação
+//
+// A função insere múltiplos registros na tabela aluno_avaliacao com as notas fornecidas
+//
+// Retorna a lista salva ou erro em caso de falha de validação ou persistência
 func AdicionarNotaAvaliacao(alunosNota []models.AlunoAvaliacao, avaliacaoId string, disciplinaId string) ([]models.AlunoAvaliacao, *utils.RestErr) {
 	if _, restErr := buscaDisciplina(disciplinaId); restErr != nil {
 		return nil, restErr
@@ -102,6 +123,11 @@ func AdicionarNotaAvaliacao(alunosNota []models.AlunoAvaliacao, avaliacaoId stri
 	return alunosNota, nil
 }
 
+// ListarDisciplinas retorna todas as disciplinas associadas a um professor
+//
+// # A resposta inclui as relações com alunos, aulas e avaliações
+//
+// Retorna uma lista de disciplinas ou erro em caso de falha
 func ListarDisciplinas(professorId string) ([]models.Disciplina, *utils.RestErr) {
 	var disciplinas []models.Disciplina
 
@@ -115,6 +141,11 @@ func ListarDisciplinas(professorId string) ([]models.Disciplina, *utils.RestErr)
 	return disciplinas, nil
 }
 
+// FecharSemestre finaliza o semestre de uma disciplina calculando média e frequência dos alunos
+//
+// # Calcula a média ponderada com base nas avaliações e a frequência baseada nas presenças
+//
+// Retorna a lista de AlunoMedia com aprovação e dados finais ou erro em caso de falha
 func FecharSemestre(disciplinaId string) ([]models.AlunoMedia, *utils.RestErr) {
 	disciplina, restErr := buscaDisciplina(disciplinaId)
 	if restErr != nil {
@@ -199,6 +230,9 @@ func FecharSemestre(disciplinaId string) ([]models.AlunoMedia, *utils.RestErr) {
 	return medias, nil
 }
 
+// buscaDisciplina é uma função auxiliar para buscar uma disciplina pelo ID
+//
+// Retorna a disciplina encontrada ou erro, caso não exista ou ocorra falha na consulta
 func buscaDisciplina(id string) (*models.Disciplina, *utils.RestErr) {
 	var disciplina models.Disciplina
 	err := database.DB.Where("id = ?", id).First(&disciplina).Error
@@ -212,6 +246,9 @@ func buscaDisciplina(id string) (*models.Disciplina, *utils.RestErr) {
 	return &disciplina, nil
 }
 
+// extractAulaIds extrai os IDs de uma lista de aulas
+//
+// Retorna um slice de strings contendo os IDs das aulas fornecidas
 func extractAulaIds(aulas []models.Aula) []string {
 	var ids []string
 	for _, a := range aulas {
@@ -220,6 +257,9 @@ func extractAulaIds(aulas []models.Aula) []string {
 	return ids
 }
 
+// extractAvaliacaoIds extrai os IDs de uma lista de avaliações
+//
+// Retorna um slice de strings contendo os IDs das avaliações fornecidas
 func extractAvaliacaoIds(avaliacoes []models.Avaliacao) []string {
 	var ids []string
 	for _, a := range avaliacoes {
@@ -228,6 +268,11 @@ func extractAvaliacaoIds(avaliacoes []models.Avaliacao) []string {
 	return ids
 }
 
+// findNota busca a nota atribuída a um aluno para uma avaliação específica
+//
+// Percorre a lista de notas e retorna a nota correspondente ao ID da avaliação fornecida.
+//
+// Se não encontrar, retorna 0.0
 func findNota(notas []models.AlunoAvaliacao, avaliacaoId string) float64 {
 	for _, n := range notas {
 		if n.AvaliacaoId == avaliacaoId {
@@ -237,6 +282,10 @@ func findNota(notas []models.AlunoAvaliacao, avaliacaoId string) float64 {
 	return 0.0
 }
 
+// buscaAvaliacao recupera uma avaliação pelo ID
+//
+// Se a avaliação não for encontrada, retorna erro 404
+// Em caso de falha de consulta, retorna erro interno
 func buscaAvaliacao(id string) (*models.Avaliacao, *utils.RestErr) {
 	var avaliacao models.Avaliacao
 	if err := database.DB.Where("id = ?", id).Find(&avaliacao).Error; err != nil {

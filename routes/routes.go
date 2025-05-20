@@ -6,32 +6,33 @@ import (
 	middleware "sistema-alunos-go/middlewares"
 )
 
+// RegistraRotas inicializa todas as rotas disponíveis na API
 func RegistraRotas(router *gin.Engine) {
 	api := router.Group("")
 
 	{
 		aluno := api.Group("/aluno")
-		aluno.POST("/", middleware.IsAuthenticated, controllers.CadastrarAluno)
-		aluno.GET("/desativar/:id", middleware.IsAuthenticated, controllers.DesativarAluno)
-		aluno.GET("/reativar/:id", middleware.IsAuthenticated, controllers.ReativarAluno)
-		aluno.DELETE("/:id", middleware.IsAuthenticated, controllers.RemoverAluno)
+		aluno.POST("/", middleware.Autenticado, controllers.CadastrarAluno)
+		aluno.GET("/desativar/:id", middleware.Autenticado, controllers.DesativarAluno)
+		aluno.GET("/reativar/:id", middleware.Autenticado, controllers.ReativarAluno)
+		aluno.DELETE("/:id", middleware.Autenticado, controllers.RemoverAluno)
 	}
 
 	{
 		aula := api.Group("/aula")
-		aula.POST("/:disciplinaId", middleware.IsAuthenticated, controllers.CadastrarAula)
-		aula.GET("/disciplina/:disciplinaId", middleware.IsAuthenticated, controllers.ListarAulasDisciplina)
-		aula.GET("/:id", middleware.IsAuthenticated, controllers.GetAula)
+		aula.POST("/:disciplinaId", middleware.Autenticado, controllers.CadastrarAula)
+		aula.GET("/disciplina/:disciplinaId", middleware.Autenticado, controllers.ListarAulasDisciplina)
+		aula.GET("/:id", middleware.Autenticado, controllers.GetAula)
 	}
 
 	{
 		disciplina := api.Group("disciplina")
-		disciplina.POST("/", middleware.IsAuthenticated, controllers.CadastrarDisciplina)
-		disciplina.POST("/matricular", middleware.IsAuthenticated, controllers.MatricularAluno)
-		disciplina.POST("/avaliacao/:disciplinaId", middleware.IsAuthenticated, controllers.AdicionarAvaliacao)
-		disciplina.POST("/avaliacao/:disciplinaId/nota/:avaliacaoId", middleware.IsAuthenticated, controllers.AdicionarNotaAvaliacao)
-		disciplina.GET("/", middleware.IsAuthenticated, controllers.ListarDisciplinas)
-		disciplina.GET("/fechar-semestre/:disciplinaId", middleware.IsAuthenticated, controllers.FecharSemestre)
+		disciplina.POST("/", middleware.Autenticado, controllers.CadastrarDisciplina)
+		disciplina.POST("/matricular", middleware.Autenticado, controllers.MatricularAluno)
+		disciplina.POST("/avaliacao/:disciplinaId", middleware.Autenticado, controllers.AdicionarAvaliacao)
+		disciplina.POST("/avaliacao/:disciplinaId/nota/:avaliacaoId", middleware.Autenticado, controllers.AdicionarNotaAvaliacao)
+		disciplina.GET("/", middleware.Autenticado, controllers.ListarDisciplinas)
+		disciplina.GET("/fechar-semestre/:disciplinaId", middleware.Autenticado, controllers.FecharSemestre)
 	}
 
 	{

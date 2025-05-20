@@ -10,10 +10,12 @@ import (
 	"strings"
 )
 
+// DisciplinaValida valida os campos de um objeto Disciplina com base nas regras definidas, retornando true para dados válidos.
 func DisciplinaValida(disciplina *models.Disciplina, ctx *gin.Context) bool {
 	return utils.BindAndValidate(disciplina, ctx)
 }
 
+// AnoSemestre valida se uma string representa um formato ano-semestre válido (AAAA-01 ou AAAA-02) a partir de 2021.
 func AnoSemestre(fl validator.FieldLevel) bool {
 	data := fl.Field().String()
 
