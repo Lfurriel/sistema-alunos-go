@@ -56,4 +56,4 @@ JWT_SECRET=sua_chave_secreta_super_segura
   go run cmd/main.go
 ```
 
-A aplicação deve subir na porta `localhost:3333` (ou conforme definido no seu .env).
+A aplicação deve subir na porta `localhost:8080` (ou conforme definido no seu .env).
